@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ThrashGuard</title>
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #07111f;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+header {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 35px;
+    border-bottom: 1px solid #1c2d42;
+    background: #091625;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.shield {
+    width: 42px;
+    height: 48px;
+    background: #1d8cff;
+    clip-path: polygon(
+        50% 0%,
+        92% 15%,
+        88% 65%,
+        72% 84%,
+        50% 100%,
+        28% 84%,
+        12% 65%,
+        8% 15%
+    );
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.subtitle {
+    font-size: 11px;
+    color: #7f92a8;
+    margin-top: 3px;
+}
+
+.status-area {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #9eafc2;
+    font-size: 13px;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #596979;
+}
+
+.status-dot.active {
+    background: #29d67d;
+    box-shadow: 0 0 10px #29d67d;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* =========================
+   MAIN
+========================= */
+
+main {
+    padding: 30px 35px;
+    max-width: 1500px;
+    margin: auto;
+}
+
+/* =========================
+   TOP CONTROL
+========================= */
+
+.top-control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-heading h1 {
+    font-size: 28px;
+    margin-bottom: 7px;
+}
+
+.page-heading p {
+    color: #7f92a8;
+    font-size: 14px;
+}
+
+.monitor-btn {
+    background: #1687f5;
+    color: white;
+    padding: 13px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.monitor-btn:hover {
+    background: #3199ff;
+}
+
+.monitor-btn.stop {
+    background: #d94d5b;
+}
+
+/* =========================
+   METRIC CARDS
+========================= */
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.metric-card {
+    background: #0c1a2a;
+    border: 1px solid #1a2d42;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 125px;
+}
+
+.metric-title {
+    color: #8498ad;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.metric-value {
+    font-size: 27px;
+    font-weight: 700;
+    margin-top: 15px;
+}
+
+.metric-unit {
+    color: #71869c;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+/* =========================
+   CONTENT GRID
+========================= */
+
+.content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+/* =========================
+   GRAPH
+========================= */
+
+.graph-card {
+    background: #0c1a2a;
+    border: 1px solid #1a2d42;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 470px;
+}
+
+.graph-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.graph-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.graph-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.arrow-btn {
+    width: 34px;
+    height: 32px;
+    border-radius: 7px;
+    background: #14263a;
+    border: 1px solid #294058;
+    color: #dce8f5;
+    font-size: 18px;
+}
+
+.arrow-btn:hover {
+    background: #1c3650;
+}
+
+.graph-name {
+    min-width: 150px;
+    text-align: center;
+    color: #78baff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+canvas {
+    width: 100%;
+    height: 365px;
+    display: block;
+}
+
+/* =========================
+   STATE CARD
+========================= */
+
+.state-card {
+    background: #0c1a2a;
+    border: 1px solid #1a2d42;
+    border-radius: 12px;
+    padding: 25px;
+    min-height: 470px;
+}
+
+.state-header {
+    color: #8498ad;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.8px;
+}
+
+.current-state {
+    margin-top: 28px;
+    padding: 22px;
+    border-radius: 12px;
+    background: #101f31;
+    border: 1px solid #21384f;
+    text-align: center;
+}
+
+.state-label {
+    color: #8095aa;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.state-name {
+    font-size: 25px;
+    font-weight: 700;
+}
+
+.state-name.normal {
+    color: #29d67d;
+}
+
+.state-name.pressure {
+    color: #ffd166;
+}
+
+.state-name.approaching {
+    color: #ff9f43;
+}
+
+.state-name.thrashing {
+    color: #ff5964;
+}
+
+.confidence {
+    margin-top: 28px;
+}
+
+.confidence-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: #9aadc0;
+}
+
+.progress {
+    height: 9px;
+    background: #17283a;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #1687f5;
+    border-radius: 20px;
+    transition: width 0.3s;
+}
+
+.system-info {
+    margin-top: 30px;
+    border-top: 1px solid #1b2c40;
+    padding-top: 20px;
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 13px;
+    font-size: 13px;
+}
+
+.info-label {
+    color: #72869a;
+}
+
+.info-value {
+    color: #dbe7f2;
+}
+
+/* =========================
+   STATE LEGEND
+========================= */
+
+.legend {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #8ca0b4;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.legend-normal {
+    background: #29d67d;
+}
+
+.legend-pressure {
+    background: #ffd166;
+}
+
+.legend-approaching {
+    background: #ff9f43;
+}
+
+.legend-thrashing {
+    background: #ff5964;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1100px) {
+
+    .metric-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+
+    header {
+        padding: 0 18px;
+    }
+
+    main {
+        padding: 20px;
+    }
+
+    .metric-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .top-control {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <div class="logo-area">
+
+        <div class="shield"></div>
+
+        <div>
+            <div class="title">
+                THRASHGUARD
+            </div>
+
+            <div class="subtitle">
+                Linux Memory & Thrashing Detection
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="status-area">
+
+        <div class="status">
+
+            <div
+                id="statusDot"
+                class="status-dot"
+            ></div>
+
+            <span id="statusText">
+                Monitoring stopped
+            </span>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main>
+
+
+    <!-- =========================
+         CONTROL
+    ========================= -->
+
+    <div class="top-control">
+
+        <div class="page-heading">
+
+            <h1>
+                System Monitor
+            </h1>
+
+            <p>
+                Real-time Linux memory and CPU analysis using PatchTST
+            </p>
+
+        </div>
+
+
+        <button
+            id="monitorButton"
+            class="monitor-btn"
+            onclick="toggleMonitoring()"
+        >
+            Start Monitoring
+        </button>
+
+    </div>
+
+
+    <!-- =========================
+         METRIC CARDS
+    ========================= -->
+
+    <div class="metric-grid">
+
+
+        <div class="metric-card">
+
+            <div class="metric-title">
+                CPU Usage
+            </div>
+
+            <div class="metric-value">
+
+                <span id="cpuValue">
+                    --
+                </span>
+
+                <span class="metric-unit">
+                    %
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Free Memory
+            </div>
+
+            <div class="metric-value">
+
+                <span id="memoryValue">
+                    --
+                </span>
+
+                <span class="metric-unit">
+                    MB
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Page Fault Rate
+            </div>
+
+            <div class="metric-value">
+
+                <span id="faultValue">
+                    --
+                </span>
+
+                <span class="metric-unit">
+                    /s
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Swap I/O
+            </div>
+
+            <div class="metric-value">
+
+                <span id="swapValue">
+                    --
+                </span>
+
+                <span class="metric-unit">
+                    /s
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="metric-card">
+
+            <div class="metric-title">
+                Run Queue
+            </div>
+
+            <div class="metric-value">
+
+                <span id="queueValue">
+                    --
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CONTENT
+    ========================= -->
+
+    <div class="content-grid">
+
+
+        <!-- =========================
+             GRAPH
+        ========================= -->
+
+        <div class="graph-card">
+
+            <div class="graph-header">
+
+                <div class="graph-title">
+                    System Metrics
+                </div>
+
+
+                <div class="graph-controls">
+
+                    <button
+                        class="arrow-btn"
+                        onclick="previousGraph()"
+                    >
+                        ←
+                    </button>
+
+
+                    <div
+                        id="graphName"
+                        class="graph-name"
+                    >
+                        CPU Usage
+                    </div>
+
+
+                    <button
+                        class="arrow-btn"
+                        onclick="nextGraph()"
+                    >
+                        →
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <canvas
+                id="metricsCanvas"
+            ></canvas>
+
+        </div>
+
+
+        <!-- =========================
+             STATE
+        ========================= -->
+
+        <div class="state-card">
+
+            <div class="state-header">
+                Current System State
+            </div>
+
+
+            <div class="current-state">
+
+                <div class="state-label">
+                    PatchTST Prediction
+                </div>
+
+                <div
+                    id="stateName"
+                    class="state-name normal"
+                >
+                    Waiting
+                </div>
+
+            </div>
+
+
+            <div class="confidence">
+
+                <div class="confidence-header">
+
+                    <span>
+                        Model Confidence
+                    </span>
+
+                    <span id="confidenceValue">
+                        0%
+                    </span>
+
+                </div>
+
+
+                <div class="progress">
+
+                    <div
+                        id="confidenceBar"
+                        class="progress-bar"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="system-info">
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Model
+                    </span>
+
+                    <span class="info-value">
+                        PatchTST
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Sequence
+                    </span>
+
+                    <span class="info-value">
+                        16 samples
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Features
+                    </span>
+
+                    <span class="info-value">
+                        5
+                    </span>
+
+                </div>
+
+
+                <div class="info-row">
+
+                    <span class="info-label">
+                        Classes
+                    </span>
+
+                    <span class="info-value">
+                        4
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="legend">
+
+                <div class="legend-item">
+
+                    <div class="legend-dot legend-normal"></div>
+
+                    Normal
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <div class="legend-dot legend-pressure"></div>
+
+                    Memory Pressure
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <div class="legend-dot legend-approaching"></div>
+
+                    Approaching Thrashing
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <div class="legend-dot legend-thrashing"></div>
+
+                    Thrashing
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<script>
+
+
+// ============================================================
+// CONFIGURATION
+// ============================================================
+
+const SEQUENCE_LENGTH = 16;
+
+const METRICS = [
+
+    {
+        key: "cpu_usage",
+        name: "CPU Usage",
+        unit: "%",
+        min: 0,
+        max: 100
+    },
+
+    {
+        key: "free_memory_mb",
+        name: "Free Memory",
+        unit: "MB",
+        min: 0,
+        max: 2500
+    },
+
+    {
+        key: "page_fault_rate",
+        name: "Page Fault Rate",
+        unit: "/s",
+        min: 0,
+        max: 100000
+    },
+
+    {
+        key: "swap_io",
+        name: "Swap I/O",
+        unit: "/s",
+        min: 0,
+        max: 10000
+    },
+
+    {
+        key: "run_queue_length",
+        name: "Run Queue",
+        unit: "",
+        min: 0,
+        max: 25
+    }
+
+];
+
+
+// ============================================================
+// STATE
+// ============================================================
+
+let monitoring = false;
+
+let monitoringInterval = null;
+
+let phase = 0;
+
+let phaseStep = 0;
+
+let currentGraph = 0;
+
+let history = [];
+
+let currentState = "Normal";
+
+
+// ============================================================
+// PHASES
+// ============================================================
+
+const PHASES = [
+
+    "Normal",
+
+    "Memory Pressure",
+
+    "Approaching Thrashing",
+
+    "Thrashing"
+
+];
+
+
+// ============================================================
+// DOM ELEMENTS
+// ============================================================
+
+const canvas =
+    document.getElementById(
+        "metricsCanvas"
+    );
+
+const ctx =
+    canvas.getContext("2d");
+
+
+// ============================================================
+// GRAPH SELECTION
+// ============================================================
+
+function updateGraphName() {
+
+    document.getElementById(
+        "graphName"
+    ).textContent =
+        METRICS[currentGraph].name;
+
+    drawGraph();
+
+}
+
+
+function nextGraph() {
+
+    currentGraph++;
+
+    if (
+        currentGraph >= METRICS.length
+    ) {
+
+        currentGraph = 0;
+
+    }
+
+    updateGraphName();
+
+}
+
+
+function previousGraph() {
+
+    currentGraph--;
+
+    if (currentGraph < 0) {
+
+        currentGraph =
+            METRICS.length - 1;
+
+    }
+
+    updateGraphName();
+
+}
+
+
+// ============================================================
+// CANVAS RESIZE
+// ============================================================
+
+function resizeCanvas() {
+
+    const rect =
+        canvas.getBoundingClientRect();
+
+    const dpr =
+        window.devicePixelRatio || 1;
+
+    canvas.width =
+        rect.width * dpr;
+
+    canvas.height =
+        rect.height * dpr;
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+    drawGraph();
+
+}
+
+
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
+
+
+// ============================================================
+// RANDOM HELPERS
+// ============================================================
+
+function randomBetween(
+    min,
+    max
+) {
+
+    return (
+        Math.random() *
+        (max - min)
+    ) + min;
+
+}
+
+
+function clamp(
+    value,
+    min,
+    max
+) {
+
+    return Math.max(
+        min,
+        Math.min(
+            max,
+            value
+        )
+    );
+
+}
+
+
+// ============================================================
+// GENERATE METRICS
+// ============================================================
+
+function generateMetrics() {
+
+    let cpu;
+    let memory;
+    let faults;
+    let swap;
+    let queue;
+
+
+    // ----------------------------------------
+    // NORMAL
+    // ----------------------------------------
+
+    if (phase === 0) {
+
+        cpu =
+            randomBetween(
+                5,
+                18
+            );
+
+        memory =
+            randomBetween(
+                1650,
+                1950
+            );
+
+        faults =
+            randomBetween(
+                600,
+                1600
+            );
+
+        swap =
+            randomBetween(
+                0,
+                10
+            );
+
+        queue =
+            randomBetween(
+                0.8,
+                3
+            );
+
+    }
+
+
+    // ----------------------------------------
+    // MEMORY PRESSURE
+    // ----------------------------------------
+
+    else if (phase === 1) {
+
+        const progress =
+            phaseStep / 50;
+
+        cpu =
+            15 +
+            progress * 35 +
+            randomBetween(
+                -5,
+                5
+            );
+
+        memory =
+            1700 -
+            progress * 350 +
+            randomBetween(
+                -50,
+                50
+            );
+
+        faults =
+            3000 +
+            progress * 25000 +
+            randomBetween(
+                -1500,
+                1500
+            );
+
+        swap =
+            100 +
+            progress * 800 +
+            randomBetween(
+                -50,
+                50
+            );
+
+        queue =
+            3 +
+            progress * 7 +
+            randomBetween(
+                -1,
+                1
+            );
+
+    }
+
+
+    // ----------------------------------------
+    // APPROACHING THRASHING
+    // ----------------------------------------
+
+    else if (phase === 2) {
+
+        cpu =
+            randomBetween(
+                50,
+                80
+            );
+
+        memory =
+            randomBetween(
+                1100,
+                1450
+            );
+
+        faults =
+            randomBetween(
+                12000,
+                25000
+            );
+
+        swap =
+            randomBetween(
+                700,
+                1500
+            );
+
+        queue =
+            randomBetween(
+                7,
+                12
+            );
+
+    }
+
+
+    // ----------------------------------------
+    // THRASHING
+    // ----------------------------------------
+
+    else {
+
+        cpu =
+            randomBetween(
+                82,
+                98
+            );
+
+        memory =
+            randomBetween(
+                1100,
+                1350
+            );
+
+        faults =
+            randomBetween(
+                9000,
+                18000
+            );
+
+        swap =
+            randomBetween(
+                1000,
+                1500
+            );
+
+        queue =
+            randomBetween(
+                9,
+                14
+            );
+
+    }
+
+
+    return {
+
+        page_fault_rate:
+            Math.max(
+                0,
+                faults
+            ),
+
+        swap_io:
+            Math.max(
+                0,
+                swap
+            ),
+
+        free_memory_mb:
+            Math.max(
+                0,
+                memory
+            ),
+
+        cpu_usage:
+            clamp(
+                cpu,
+                0,
+                100
+            ),
+
+        run_queue_length:
+            Math.max(
+                0,
+                queue
+            )
+
+    };
+
+}
+
+
+// ============================================================
+// UPDATE METRIC CARDS
+// ============================================================
+
+function updateMetricCards(
+    data
+) {
+
+    document.getElementById(
+        "cpuValue"
+    ).textContent =
+        data.cpu_usage.toFixed(1);
+
+    document.getElementById(
+        "memoryValue"
+    ).textContent =
+        data.free_memory_mb.toFixed(0);
+
+    document.getElementById(
+        "faultValue"
+    ).textContent =
+        data.page_fault_rate.toFixed(0);
+
+    document.getElementById(
+        "swapValue"
+    ).textContent =
+        data.swap_io.toFixed(0);
+
+    document.getElementById(
+        "queueValue"
+    ).textContent =
+        data.run_queue_length.toFixed(1);
+
+}
+
+
+// ============================================================
+// ADD HISTORY
+// ============================================================
+
+function addHistory(
+    data
+) {
+
+    history.push(data);
+
+    if (
+        history.length > 60
+    ) {
+
+        history.shift();
+
+    }
+
+}
+
+
+// ============================================================
+// DRAW GRAPH
+// ============================================================
+
+function drawGraph() {
+
+    const width =
+        canvas.clientWidth;
+
+    const height =
+        canvas.clientHeight;
+
+    if (
+        width <= 0 ||
+        height <= 0
+    ) {
+
+        return;
+
+    }
+
+
+    ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    // ----------------------------------------
+    // BACKGROUND
+    // ----------------------------------------
+
+    ctx.fillStyle =
+        "#0c1a2a";
+
+    ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+    );
+
+
+    const paddingLeft = 60;
+    const paddingRight = 20;
+    const paddingTop = 25;
+    const paddingBottom = 40;
+
+    const graphWidth =
+        width -
+        paddingLeft -
+        paddingRight;
+
+    const graphHeight =
+        height -
+        paddingTop -
+        paddingBottom;
+
+
+    // ----------------------------------------
+    // GRID
+    // ----------------------------------------
+
+    ctx.strokeStyle =
+        "#1b2c40";
+
+    ctx.lineWidth = 1;
+
+    for (
+        let i = 0;
+        i <= 5;
+        i++
+    ) {
+
+        const y =
+            paddingTop +
+            (
+                graphHeight *
+                i /
+                5
+            );
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            paddingLeft,
+            y
+        );
+
+        ctx.lineTo(
+            width -
+            paddingRight,
+            y
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    for (
+        let i = 0;
+        i <= 6;
+        i++
+    ) {
+
+        const x =
+            paddingLeft +
+            (
+                graphWidth *
+                i /
+                6
+            );
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x,
+            paddingTop
+        );
+
+        ctx.lineTo(
+            x,
+            height -
+            paddingBottom
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    // ----------------------------------------
+    // Y AXIS LABELS
+    // ----------------------------------------
+
+    const metric =
+        METRICS[currentGraph];
+
+    ctx.fillStyle =
+        "#71869c";
+
+    ctx.font =
+        "11px Arial";
+
+    for (
+        let i = 0;
+        i <= 5;
+        i++
+    ) {
+
+        const value =
+            metric.max -
+            (
+                metric.max *
+                i /
+                5
+            );
+
+        const y =
+            paddingTop +
+            (
+                graphHeight *
+                i /
+                5
+            );
+
+        ctx.fillText(
+            formatGraphValue(
+                value
+            ),
+            8,
+            y + 4
+        );
+
+    }
+
+
+    // ----------------------------------------
+    // NO DATA
+    // ----------------------------------------
+
+    if (
+        history.length < 2
+    ) {
+
+        ctx.fillStyle =
+            "#61768b";
+
+        ctx.font =
+            "14px Arial";
+
+        ctx.textAlign =
+            "center";
+
+        ctx.fillText(
+            "Start monitoring to view metrics",
+            width / 2,
+            height / 2
+        );
+
+        ctx.textAlign =
+            "left";
+
+        return;
+
+    }
+
+
+    // ----------------------------------------
+    // GRAPH LINE
+    // ----------------------------------------
+
+    ctx.beginPath();
+
+    history.forEach(
+        (
+            point,
+            index
+        ) => {
+
+            const rawValue =
+                point[
+                    metric.key
+                ];
+
+            const value =
+                clamp(
+                    rawValue,
+                    metric.min,
+                    metric.max
+                );
+
+            const x =
+                paddingLeft +
+                (
+                    index /
+                    (
+                        history.length -
+                        1
+                    )
+                ) *
+                graphWidth;
+
+            const normalized =
+                (
+                    value -
+                    metric.min
+                ) /
+                (
+                    metric.max -
+                    metric.min
+                );
+
+            const y =
+                paddingTop +
+                graphHeight -
+                (
+                    normalized *
+                    graphHeight
+                );
+
+            if (
+                index === 0
+            ) {
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            }
+
+            else {
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+    );
+
+
+    ctx.strokeStyle =
+        "#1687f5";
+
+    ctx.lineWidth = 3;
+
+    ctx.lineJoin =
+        "round";
+
+    ctx.lineCap =
+        "round";
+
+    ctx.stroke();
+
+
+    // ----------------------------------------
+    // END POINT
+    // ----------------------------------------
+
+    const last =
+        history[
+            history.length - 1
+        ];
+
+    const lastValue =
+        clamp(
+            last[
+                metric.key
+            ],
+            metric.min,
+            metric.max
+        );
+
+    const lastX =
+        paddingLeft +
+        graphWidth;
+
+    const lastNormalized =
+        (
+            lastValue -
+            metric.min
+        ) /
+        (
+            metric.max -
+            metric.min
+        );
+
+    const lastY =
+        paddingTop +
+        graphHeight -
+        (
+            lastNormalized *
+            graphHeight
+        );
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        lastX,
+        lastY,
+        5,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fillStyle =
+        "#ffffff";
+
+    ctx.fill();
+
+}
+
+
+// ============================================================
+// GRAPH VALUE FORMAT
+// ============================================================
+
+function formatGraphValue(
+    value
+) {
+
+    if (
+        value >= 1000
+    ) {
+
+        return (
+            value /
+            1000
+        ).toFixed(0) +
+        "k";
+
+    }
+
+    return value.toFixed(0);
+
+}
+
+
+// ============================================================
+// UPDATE PREDICTION
+// ============================================================
+
+function updatePrediction(
+    prediction
+) {
+
+    if (
+        !prediction
+    ) {
+
+        return;
+
+    }
+
+
+    const state =
+        prediction.label_name;
+
+    const confidence =
+        prediction.confidence;
+
+
+    const stateElement =
+        document.getElementById(
+            "stateName"
+        );
+
+
+    stateElement.textContent =
+        state;
+
+
+    stateElement.className =
+        "state-name";
+
+
+    if (
+        state === "Normal"
+    ) {
+
+        stateElement.classList.add(
+            "normal"
+        );
+
+    }
+
+    else if (
+        state === "Memory Pressure"
+    ) {
+
+        stateElement.classList.add(
+            "pressure"
+        );
+
+    }
+
+    else if (
+        state === "Approaching Thrashing"
+    ) {
+
+        stateElement.classList.add(
+            "approaching"
+        );
+
+    }
+
+    else if (
+        state === "Thrashing"
+    ) {
+
+        stateElement.classList.add(
+            "thrashing"
+        );
+
+    }
+
+
+    document.getElementById(
+        "confidenceValue"
+    ).textContent =
+        confidence.toFixed(1) +
+        "%";
+
+
+    document.getElementById(
+        "confidenceBar"
+    ).style.width =
+        confidence +
+        "%";
+
+
+    currentState =
+        state;
+
+}
+
+
+// ============================================================
+// SEND METRICS TO FLASK
+// ============================================================
+
+async function sendMetrics(
+    data
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                "/metrics",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify(data)
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            result.prediction
+        ) {
+
+            updatePrediction(
+                result.prediction
+            );
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Flask error:",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================================
+// MONITORING LOOP
+// ============================================================
+
+function monitorStep() {
+
+    if (
+        !monitoring
+    ) {
+
+        return;
+
+    }
+
+
+    const data =
+        generateMetrics();
+
+
+    updateMetricCards(
+        data
+    );
+
+
+    addHistory(
+        data
+    );
+
+
+    drawGraph();
+
+
+    sendMetrics(
+        data
+    );
+
+
+    phaseStep++;
+
+
+    // ----------------------------------------
+    // CHANGE PHASE
+    // ----------------------------------------
+
+    if (
+        phaseStep >= 50
+    ) {
+
+        phaseStep = 0;
+
+        phase++;
+
+        if (
+            phase >= PHASES.length
+        ) {
+
+            phase = 0;
+
+        }
+
+    }
+
+}
+
+
+// ============================================================
+// START / STOP
+// ============================================================
+
+function toggleMonitoring() {
+
+    if (
+        monitoring
+    ) {
+
+        stopMonitoring();
+
+    }
+
+    else {
+
+        startMonitoring();
+
+    }
+
+}
+
+
+function startMonitoring() {
+
+    monitoring = true;
+
+    phase = 0;
+
+    phaseStep = 0;
+
+    history = [];
+
+
+    const button =
+        document.getElementById(
+            "monitorButton"
+        );
+
+
+    button.textContent =
+        "Stop Monitoring";
+
+
+    button.classList.add(
+        "stop"
+    );
+
+
+    document.getElementById(
+        "statusText"
+    ).textContent =
+        "Monitoring active";
+
+
+    document.getElementById(
+        "statusDot"
+    ).classList.add(
+        "active"
+    );
+
+
+    fetch(
+        "/reset",
+        {
+            method: "POST"
+        }
+    ).catch(
+        () => {}
+    );
+
+
+    monitorStep();
+
+
+    monitoringInterval =
+        setInterval(
+            monitorStep,
+            1000
+        );
+
+}
+
+
+function stopMonitoring() {
+
+    monitoring = false;
+
+
+    clearInterval(
+        monitoringInterval
+    );
+
+
+    monitoringInterval =
+        null;
+
+
+    const button =
+        document.getElementById(
+            "monitorButton"
+        );
+
+
+    button.textContent =
+        "Start Monitoring";
+
+
+    button.classList.remove(
+        "stop"
+    );
+
+
+    document.getElementById(
+        "statusText"
+    ).textContent =
+        "Monitoring stopped";
+
+
+    document.getElementById(
+        "statusDot"
+    ).classList.remove(
+        "active"
+    );
+
+}
+
+
+// ============================================================
+// INITIALIZE
+// ============================================================
+
+resizeCanvas();
+
+updateGraphName();
+
+</script>
+
+
+</body>
+
+</html>
